@@ -114,13 +114,13 @@
       });
       card.addEventListener('mouseleave', () => { card.style.transform = ''; });
     });
-    const stage = $('#stage'), scene = $('#scene');
-    stage.addEventListener('mousemove', e => {
-      const r = stage.getBoundingClientRect();
-      scene.style.setProperty('--ry', (((e.clientX - r.left) / r.width - .5) * 24 - 6).toFixed(1) + 'deg');
-      scene.style.setProperty('--rx', ((.5 - (e.clientY - r.top) / r.height) * 16 + 6).toFixed(1) + 'deg');
+    const art = $('#heroArt'), pic = $('#heroPic');
+    art.addEventListener('mousemove', e => {
+      const r = art.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+      pic.style.transform = `perspective(900px) rotateY(${(x * 8).toFixed(1)}deg) rotateX(${(-y * 6).toFixed(1)}deg)`;
     });
-    stage.addEventListener('mouseleave', () => { scene.style.removeProperty('--ry'); scene.style.removeProperty('--rx'); });
+    art.addEventListener('mouseleave', () => { pic.style.transform = ''; });
   }
 
   /* ---- Enquiry: preselect service ---- */
