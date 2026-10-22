@@ -27,6 +27,19 @@
     ['Displays, Electronics & Appliances', [['LG', 'lg', 'A50034'], ['Samsung', 'samsung', '1428A0'], ['Panasonic', 'panasonic', '0041C0']]],
     ['Audio, Video & Security', [['Sennheiser', 'sennheiser', '000000'], ['Bosch', 'bosch', 'E20015'], ['Honeywell', 'honeywell', 'E92D2D'], ['Adonis AV', '', ''], ['Ahuja', '', ''], ['Studiomaster', '', '']]]
   ];
+  // Capability cards: [title, icon, description, service to preselect in the enquiry form]. Edit freely.
+  const HELP = [
+    ['Computer & Laptop Service', 'fa-laptop', 'Diagnosis and repair, with clear guidance on what your computer needs.', 'Laptop Sales and Service'],
+    ['CCTV Installation', 'fa-video', 'Camera setup explained clearly, with help choosing a suitable solution.', 'CCTV Sales and Service'],
+    ['Networking Solutions', 'fa-network-wired', 'Office network support with clear communication from start to finish.', 'Networking Sales and Service'],
+    ['Computer & Laptop Purchase', 'fa-desktop', 'Help comparing computer and laptop options for your needs and budget.', 'Desktop Sales and Service'],
+    ['Printers & Office Equipment', 'fa-print', 'Advice on printers and office equipment, and answers to your questions.', 'Printer Sales and Service'],
+    ['Overall IT Support', 'fa-headset', 'IT products and technical support in one place in Bhubaneswar.', 'Other / General Enquiry']
+  ];
+  // Reviews are edited in reviews.js, so a typo there can never break the rest of the site.
+  const REVIEWS = (Array.isArray(window.REVIEWS) ? window.REVIEWS : [])
+    .filter(r => Array.isArray(r) && r[2])
+    .map(([n, r, t, s]) => [String(n || ''), Math.min(5, Math.max(0, Math.round(+r || 0))), String(t), String(s || '')]);
   const $ = (s, el = document) => el.querySelector(s);
   const $$ = (s, el = document) => [...el.querySelectorAll(s)];
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -70,6 +83,19 @@
 
   $('#service').innerHTML = '<option value="">Select a service</option>' +
     SERVICES.map(([t]) => `<option>${esc(t)}</option>`).join('') + '<option>Other / General Enquiry</option>';
+
+  $('#helpGrid').innerHTML = HELP.map(([t, ic, d, svc]) => `
+    <article class="card reveal">
+      <div class="ic"><i class="fa-solid ${ic}" aria-hidden="true"></i></div>
+      <h3>${esc(t)}</h3><p>${esc(d)}</p>${enqLink(svc)}
+    </article>`).join('');
+
+  $('#reviewGrid').innerHTML = REVIEWS.length ? REVIEWS.map(([n, r, t, src]) => `
+    <article class="card rv reveal">
+      ${r ? `<div class="stars" aria-label="${r} out of 5 stars">${'<i class="fa-solid fa-star" aria-hidden="true"></i>'.repeat(r)}</div>` : ''}
+      <p>“${esc(t)}”</p><h3>${esc(n)}</h3>${src ? `<small>${esc(src)}</small>` : ''}
+    </article>`).join('') :
+    '<div class="rv-empty glass"><i class="fa-brands fa-google" aria-hidden="true"></i><p>Customers can read and leave reviews on our Google listing. Tap the button below to share your experience.</p></div>';
 
   $('#year').textContent = new Date().getFullYear();
 
